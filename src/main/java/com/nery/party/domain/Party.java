@@ -49,6 +49,7 @@ public class Party implements Serializable {
         this.author = author;
         this.descricao = descricao;
         this.budget = budget;
+        this.servico = servico;
     }
 
     public Integer getId() {
