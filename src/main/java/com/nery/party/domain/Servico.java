@@ -1,23 +1,20 @@
 package com.nery.party.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-public class Service implements Serializable{
-    
-    private static final long serialVersionID = 1L;
+public class Servico implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,16 +26,15 @@ public class Service implements Serializable{
 
     private Float price;
     
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "service_id")
-    private Party party;
+    /* Um serviço pode ter mais de uma festa ou seja relacionamento de Serviço - Festa */
+    @OneToMany(mappedBy = "servico")
+    private List<Party> parties = new ArrayList<>();
 
-    public Service(){
+    public Servico(){
         super();
     }
 
-    public Service(Integer id, String descricao, Float price){
+    public Servico(Integer id, String descricao, Float price){
         this.id = id;
         this.descricao = descricao;
         this.price = price;
@@ -68,12 +64,12 @@ public class Service implements Serializable{
         this.price = price;
     }
 
-    public Party getParty() {
-        return party;
+    public List<Party> getParties() {
+        return parties;
     }
 
-    public void setParty(Party party) {
-        this.party = party;
+    public void setParties(List<Party> parties) {
+        this.parties = parties;
     }
 
     @Override
@@ -92,7 +88,7 @@ public class Service implements Serializable{
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Service other = (Service) obj;
+        Servico other = (Servico) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

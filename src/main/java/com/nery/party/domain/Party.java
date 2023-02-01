@@ -1,21 +1,21 @@
 package com.nery.party.domain;
 
 import java.io.Serializable;
-import java.util.*;
 
 import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Party implements Serializable {
-
-    private static final long serialVersionID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,23 +34,21 @@ public class Party implements Serializable {
 
     private Float budget;
 
-    @OneToMany(mappedBy = "service")
-    private List<Service> services = new ArrayList<>();
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "servico_id")
+    private Servico servico;
 
     public Party() {
         super();
     }
 
-    public Party(Integer id, String title, String author, String descricao, Float budget){
+    public Party(Integer id, String title, String author, String descricao, Float budget, Servico servico) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.descricao = descricao;
         this.budget = budget;
-    }
-
-    public static long getSerialversionid() {
-        return serialVersionID;
     }
 
     public Integer getId() {
@@ -93,12 +91,12 @@ public class Party implements Serializable {
         this.budget = budget;
     }
 
-    public List<Service> getServices() {
-        return services;
+    public Servico getServico() {
+        return servico;
     }
 
-    public void setServices(List<Service> services) {
-        this.services = services;
+    public void setServico(Servico servico) {
+        this.servico = servico;
     }
 
     @Override
