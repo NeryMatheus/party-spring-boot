@@ -1,16 +1,17 @@
 package com.nery.party.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
@@ -25,19 +26,23 @@ public class Servico implements Serializable{
     private String descricao;
 
     private Float price;
-    
-    /* Um serviço pode ter mais de uma festa ou seja relacionamento de Serviço - Festa */
-    @OneToMany(mappedBy = "servico")
-    private List<Party> parties = new ArrayList<>();
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "party_id")
+    private Party party;
+
+    /* Função para verificar a soma dos budgets e menor que a variavel price spring boot antes de salvar no banco de dados */    
 
     public Servico(){
         super();
     }
 
-    public Servico(Integer id, String descricao, Float price){
+    public Servico(Integer id, String descricao, Float price, Party party){
         this.id = id;
         this.descricao = descricao;
         this.price = price;
+        this.party = party;
     }
 
     public Integer getId() {
@@ -64,12 +69,12 @@ public class Servico implements Serializable{
         this.price = price;
     }
 
-    public List<Party> getParties() {
-        return parties;
+    public Party getParty() {
+        return party;
     }
 
-    public void setParties(List<Party> parties) {
-        this.parties = parties;
+    public void setParty(Party party) {
+        this.party = party;
     }
 
     @Override
